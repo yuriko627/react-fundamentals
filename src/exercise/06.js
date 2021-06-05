@@ -3,7 +3,7 @@
 
 import * as React from 'react'
 
-function UsernameForm({onSubmitUsername}) {
+function UsernameForm({onSubmitNames}) {
   // 🐨 add a submit event handler here (`handleSubmit`).
   // 💰 Make sure to accept the `event` as an argument and call
   // `event.preventDefault()` to prevent the default behavior of form submit
@@ -19,11 +19,46 @@ function UsernameForm({onSubmitUsername}) {
 
   // 🐨 make sure to associate the label to the input.
   // to do so, set the value of 'htmlFor' prop of the label to the id of input
+
+  const [loweredFirstName, setFirstName] = React.useState('')
+  const [loweredLastName, setLastName] = React.useState('')
+
+  const firstNameInputRef = React.useRef()
+  const lastNameInputRef = React.useRef()
+
+  function handleChange(event) {
+    const firstName = firstNameInputRef.current.value
+    const lastName = lastNameInputRef.current.value
+    console.log(event.target)
+    setFirstName(firstName.toLowerCase())
+    setLastName(lastName.toLowerCase())
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault()
+    console.dir(event.target)
+    onSubmitNames(loweredFirstName, loweredLastName)
+  }
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div>
-        <label>Username:</label>
-        <input type="text" />
+        <label htmlFor="firstNameInput">Firstname:</label>
+        <input
+          type="text"
+          ref={firstNameInputRef}
+          onChange={handleChange}
+          value={loweredFirstName}
+        />
+      </div>
+      <div>
+        <label htmlFor="lastNameInput">Lastname:</label>
+        <input
+          type="text"
+          ref={lastNameInputRef}
+          onChange={handleChange}
+          value={loweredLastName}
+        />
       </div>
       <button type="submit">Submit</button>
     </form>
@@ -31,8 +66,9 @@ function UsernameForm({onSubmitUsername}) {
 }
 
 function App() {
-  const onSubmitUsername = username => alert(`You entered: ${username}`)
-  return <UsernameForm onSubmitUsername={onSubmitUsername} />
+  const onSubmitNames = (firstname, lastname) =>
+    alert(`You entered: ${firstname} ${lastname}`)
+  return <UsernameForm onSubmitNames={onSubmitNames} />
 }
 
 export default App
